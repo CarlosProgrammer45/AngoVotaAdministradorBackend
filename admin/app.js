@@ -22,9 +22,8 @@ const app = express();
 
 //Middleware necessários
 app.use(cors({
-    origin: ['http://localhost:4200'
-
-    ],
+    origin: process.env.CONEXAO,
+    
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['content-type', 'Authorization'],
     credentials: true
@@ -62,7 +61,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors:{
 
-      origin: ['http://localhost:4200'],
+      origin: process.env.CONEXAO,
 
         methods:['GET', 'POST'],
 
