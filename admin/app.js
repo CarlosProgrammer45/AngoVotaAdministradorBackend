@@ -25,7 +25,7 @@ app.use(cors({
     origin: process.env.CONEXAO,
     
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['content-type', 'Authorization'],
+   // allowedHeaders: ['content-type', 'Authorization'],
     credentials: true
 }));// conexão com o frontend
 app.use(express.json()); //trata toda estrutura em json
