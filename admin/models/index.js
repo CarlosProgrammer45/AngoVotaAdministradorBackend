@@ -1,5 +1,5 @@
 'use strict';
-
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
@@ -10,17 +10,11 @@ const config = require("../config/database");
 const db = {};
 
 //Buscar informações do banco, seguindo a ordem abaixo
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  {
-    host: config.host,
-    port: config.port,
-    dialect: config.dialect,
-    logging: false
-  }
-);
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+  logging: false
+});
+
 
 fs
   .readdirSync(__dirname)
