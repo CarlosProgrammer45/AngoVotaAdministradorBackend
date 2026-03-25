@@ -36,9 +36,9 @@ secret: process.env.KeySession, //Chave secreta
 resave: false, // em false, não salva a sessão se não mudou
 saveUninitialized: false, // em false, não cria sessão vazia
 cookie:{
-    secure: false, //true quando tiver em produção
+    secure: true, //true quando tiver em produção
     httpOnly: true, //Impede ataques de injeção de javascript
-    sameSite: 'lax', // Strict -> Só permite o envio de cookies que veem do mesmo domínio
+    sameSite: 'Strict', // Strict -> Só permite o envio de cookies que veem do mesmo domínio
     maxAge: 1000 * 60 * 60 // Equivale a 1 hora  
 }
 }));
