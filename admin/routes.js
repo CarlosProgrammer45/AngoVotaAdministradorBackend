@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const path = require('path');
 
 const bilheteController = require('./controllers/bilheteController');
 
@@ -17,6 +18,14 @@ const middleware = require('./middlewares/autenticarSessao');
 const routes = Router();
 
 const candidatoController = require('./controllers/candidatoController');
+
+//Modelo
+
+const modeloTensor = require('./service/serviceModelo');
+
+// Modelo Gemini 
+
+const modeloGemini = require('./service/modeloGemini');
 
 
 routes.post('/ad/verify', bilheteController.ValidarBilhetes);
@@ -80,6 +89,50 @@ routes.post('/enviar/webauthn/verificar-login', credenciaisController.verificarL
 routes.post('/candidatos/criar', candidatoController.criarCandidato);
 routes.get('/candidato', candidatoController.listarCandidatos);
 routes.get('/candidato/total/', candidatoController.totalCandidatos);
+
+
+//Modelo
+
+routes.get('/treinarModelo', modeloTensor.treinarModelo.bind(modeloTensor));
+routes.get('/prever', async (req, res)=>{
+    try {
+        const caminhoImagem = path.join(__dirname, './dataset/validos/7967631_770x433_acf_cropped.jpg');
+
+        const resultado = modeloTensor.prever(caminhoImagem);
+
+        return res.json(resultado);
+    } catch (error) {
+
+        console.error(error)
+
+
+        return res.status(400).json({error: 'Erro ao prever'});
+        
+    }
+});
+
+// Modelos Gemini
+
+routes.get('/perguntar-ao-gemini', async (req, res)=>{
+
+    try {
+
+        const imagem = path.join(__dirname, './1.jpg');
+        
+        const enviar = modeloGemini.EnviarImagem(imagem);
+
+
+        return res.send("Resultado:", enviar);
+
+    } catch (error) {
+
+        
+        return res.status(400).json({error: 'Erro ao enviar Imagem'});
+        
+    }
+});
+
+
 
 
 
