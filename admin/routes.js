@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const path = require('path');
 
+const multer = require('multer');
+
 const bilheteController = require('./controllers/bilheteController');
 
 const credenciaisController = require('./controllers/credenciaisController');
@@ -113,16 +115,99 @@ routes.get('/prever', async (req, res)=>{
 
 // Modelos Gemini
 
-routes.get('/perguntar-ao-gemini', async (req, res)=>{
+const carregarImagem = multer({dest: 'imagensCarregadas/'});
+
+const sessoes = {};
+
+
+routes.get('/analisar/imagem', carregarImagem.single('imagem'), async (req, res)=>{
 
     try {
 
-        const imagem = path.join(__dirname, './1.jpg');
+
+        // Verifica se há algum ficheiro(imagem)
+
+        if (!req.file) {
+
+            console.log('Nenhuma imagem enviada');
+
+             return res.status(400).json({ erro: "Nenhuma imagem enviada" });
+        }
+
+        const faceEnviada = req.body.face;
+
+        const utilizadorId = req.body.utilizadorId
+
+        const fs = require('fs');
+
+        //const sessao = sessoes[utilizadorId] || { etapa: 'frente' };
+
+        // Verificar se o estado da sessão é diferente da foto enviada primeiro 
+
+        /*
+
+        if (sessao.etapa === 'frente' && faceEnviada !== 'frente') {
+
+            fs.unlinkSync(req.file.path);
+
+            return res.status(400).json({ error: 'Tem de enviar primeiro a frente' });
+        } 
+
+        // Verificar se a segunda imagem é verso
+
+        if (sessao.etapa === 'verso' && faceEnviada !== 'verso') {
+
+            fs.unlinkSync(req.file.path);
+
+            return res.status(400).json({ error: 'Frente já tirada, agora faça com o verso' });
+        }
+
+        */
+
+
+        const resultado = modeloTensor.EnviarImagem(req.file.path);
+
+        fs.unlinkSync(req.file.path);
+
+        if (resultado.face !==  faceEnviada) {
+
+            console.log(`Era esperado a ${faceEnviada} mas foi enviado o ${resultado.face}`);
+
+            return res.status(400).json({
+                e_bi_Angolano: false,
+                e_original: false,
+                motivo: `Era esperado a ${faceEnviada} mas foi enviado o ${resultado.face}`
+            });
+
+        }
+
+        // Atualizar o estado
+
+        /*
+
+        if (faceEnviada === 'frente') {
+
+            sessoes[utilizadorId] = { etapa: 'verso' };
+
+        }else{
+
+            delete sessoes[utilizadorId];
+        }
+
+        */
+
         
-        const enviar = modeloGemini.EnviarImagem(imagem);
+        //Apaga o ficheiro temporário
+        console.log(resultado.motivo);
+
+        return res.status(200).json(resultado);
+
+        //const imagem = path.join(__dirname, './1.jpg');
+        
+        //const enviar = modeloGemini.EnviarImagem(imagem);
 
 
-        return res.send("Resultado:", enviar);
+       // return res.send("Resultado:", enviar);
 
     } catch (error) {
 
