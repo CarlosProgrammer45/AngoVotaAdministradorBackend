@@ -120,7 +120,7 @@ const carregarImagem = multer({dest: 'imagensCarregadas/'});
 const sessoes = {};
 
 
-routes.get('/analisar/imagem', carregarImagem.single('imagem'), async (req, res)=>{
+routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res)=>{
 
     try {
 
