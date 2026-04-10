@@ -165,7 +165,7 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
         */
 
 
-        const resultado = modeloTensor.EnviarImagem(req.file.path);
+        const resultado = modeloGemini.EnviarImagem(req.file.path);
 
         fs.unlinkSync(req.file.path);
 
