@@ -212,7 +212,7 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
     } catch (error) {
 
         
-        return res.status(400).json({error: 'Erro ao enviar Imagem'});
+        return res.status(500).json({error: 'Erro ao enviar Imagem'});
         
     }
 });
