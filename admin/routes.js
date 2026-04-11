@@ -140,11 +140,11 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
 
         const fs = require('fs');
 
-        const sessao = sessoes[utilizadorId] || { etapa: 'frente' };
+        //const sessao = sessoes[utilizadorId] || { etapa: 'frente' };
 
         // Verificar se o estado da sessão é diferente da foto enviada primeiro 
 
-        
+        /*
 
         if (sessao.etapa === 'frente' && faceEnviada !== 'frente') {
 
@@ -161,6 +161,8 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
 
             return res.status(400).json({ error: 'Frente já tirada, agora faça com o verso' });
         }
+
+        */
 
         
 
@@ -184,7 +186,7 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
         // Atualizar o estado
 
         
-
+/*
         if (faceEnviada === 'frente') {
 
             sessoes[utilizadorId] = { etapa: 'verso' };
@@ -193,6 +195,8 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
 
             delete sessoes[utilizadorId];
         }
+
+        */
 
         
         
