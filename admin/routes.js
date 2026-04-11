@@ -117,7 +117,7 @@ routes.get('/prever', async (req, res)=>{
 
 const carregarImagem = multer({dest: 'imagensCarregadas/'});
 
-const sessoes = {};
+//const sessoes = {};
 
 
 routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res)=>{
@@ -133,10 +133,10 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
 
              return res.status(400).json({ erro: "Nenhuma imagem enviada" });
         }
-
+        // Essa é a variável para tirares
         const faceEnviada = req.body.face;
 
-        const utilizadorId = req.body.utilizadorId
+        //const utilizadorId = req.body.utilizadorId
 
         const fs = require('fs');
 
@@ -166,11 +166,12 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
 
         
 
-
+        // Envia aqui
         const resultado = await modeloGemini.VerificarBI(req.file.path);
 
         fs.unlinkSync(req.file.path);
 
+        //Essa é a verificação para tirares
         if (resultado.face !==  faceEnviada) {
 
             console.log(`Era esperado a ${faceEnviada} mas foi enviado o ${resultado.face}`);
@@ -200,7 +201,7 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
 
         
         
-        //Apaga o ficheiro temporário
+      
         console.log(resultado.motivo);
 
         return res.status(200).json(resultado);
