@@ -164,10 +164,12 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
 
         */
 
+        const caminhoImagem = req.file.path
 
-        const resultado = modeloGemini.EnviarImagem(req.file.path);
 
-        fs.unlinkSync(req.file.path);
+        const resultado = modeloGemini.EnviarImagem(caminhoImagem);
+
+        fs.unlinkSync(caminhoImagem);
 
         if (resultado.face !==  faceEnviada) {
 
