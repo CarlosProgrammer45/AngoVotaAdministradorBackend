@@ -30,6 +30,7 @@ app.use(cors({
 }));// conexão com o frontend
 app.use(express.json()); //trata toda estrutura em json
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 // Configurações da sessão
 app.use(session({
 secret: process.env.KeySession, //Chave secreta
