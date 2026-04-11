@@ -176,7 +176,7 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
             return res.status(400).json({
                 e_bi_Angolano: false,
                 e_original: false,
-                motivo: `Era esperado a ${faceEnviada} mas foi enviado o ${resultado.face}`
+                error: `Era esperado a ${faceEnviada} mas foi enviado o ${resultado.face}`
             });
 
         }
