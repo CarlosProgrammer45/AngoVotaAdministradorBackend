@@ -120,110 +120,64 @@ const carregarImagem = multer({dest: 'imagensCarregadas/'});
 const sessoes = {};
 
 
-routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res)=>{
-
+routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res) => {
     try {
-
-
-        // Verifica se há algum ficheiro(imagem)
-
         if (!req.file) {
-
-            console.log('Nenhuma imagem enviada');
-
-             return res.status(400).json({ erro: "Nenhuma imagem enviada" });
+            return res.status(400).json({ erro: "Nenhuma imagem enviada" });
         }
 
         const faceEnviada = req.body.face;
-
-        const utilizadorId = req.body.utilizadorId
-
-         const caminhoImagem = req.file.path
-
+        const utilizadorId = req.body.utilizadorId;
         const fs = require('fs');
+        const caminhoImagem = req.file.path;
 
-        if (!fs.existsSync('imagensCarregadas')) {
-        fs.mkdirSync('imagensCarregadas');
-}
+        // Log para ver o que chega
+        console.log("Face enviada:", faceEnviada);
+        console.log("Utilizador ID:", utilizadorId);
+        console.log("Caminho imagem:", caminhoImagem);
+        console.log("Key Mistral:", process.env.KeyMISTRAL ? "OK" : "INDEFINIDA");
 
         const sessao = sessoes[utilizadorId] || { etapa: 'frente' };
 
-        // Verificar se o estado da sessão é diferente da foto enviada primeiro 
-
-        
-
         if (sessao.etapa === 'frente' && faceEnviada !== 'frente') {
-
             fs.unlinkSync(caminhoImagem);
-
-            return res.status(400).json({ error: 'Tem de enviar primeiro a frente' });
-        } 
-
-        // Verificar se a segunda imagem é verso
-
-        if (sessao.etapa === 'verso' && faceEnviada !== 'verso') {
-
-            fs.unlinkSync(caminhoImagem);
-
-            return res.status(400).json({ error: 'Frente já tirada, agora faça com o verso' });
+            return res.status(400).json({ erro: 'Tem de enviar primeiro a frente do BI' });
         }
 
-        
+        if (sessao.etapa === 'verso' && faceEnviada !== 'verso') {
+            fs.unlinkSync(caminhoImagem);
+            return res.status(400).json({ erro: 'Frente já enviada, envie agora o verso do BI' });
+        }
 
-       
-
-
-        const resultado = await modeloGemini.EnviarImagem(caminhoImagem);
+        const resultado = await modeloGemini.VerificarBI(caminhoImagem);
+        console.log("Resultado Gemini:", JSON.stringify(resultado));
 
         fs.unlinkSync(caminhoImagem);
 
-        if (resultado.face !==  faceEnviada) {
-
-            console.log(`Era esperado a ${faceEnviada} mas foi enviado o ${resultado.face}`);
-
+        if (resultado.face !== faceEnviada) {
             return res.status(400).json({
                 e_bi_Angolano: false,
                 e_original: false,
                 motivo: `Era esperado a ${faceEnviada} mas foi enviado o ${resultado.face}`
             });
-
         }
 
-        // Atualizar o estado
-
-        
-
         if (faceEnviada === 'frente') {
-
             sessoes[utilizadorId] = { etapa: 'verso' };
-
-        }else{
-
+        } else {
             delete sessoes[utilizadorId];
         }
 
-        
-
-        
-        //Apaga o ficheiro temporário
-        console.log(resultado.motivo);
-
         return res.status(200).json(resultado);
 
-        //const imagem = path.join(__dirname, './1.jpg');
-        
-        //const enviar = modeloGemini.EnviarImagem(imagem);
-
-
-       // return res.send("Resultado:", enviar);
-
     } catch (error) {
-
-        
-        return res.status(500).json({error: 'Erro ao enviar Imagem', error});
-        
+        // Mostra o erro real no log do Render
+        console.error("ERRO DETALHADO:", error.message);
+        console.error("STACK:", error.stack);
+        return res.status(500).json({ erro: error.message });
     }
 });
+
 
 
 
