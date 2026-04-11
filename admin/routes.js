@@ -138,17 +138,19 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
 
         const utilizadorId = req.body.utilizadorId
 
+         const caminhoImagem = req.file.path
+
         const fs = require('fs');
 
-        //const sessao = sessoes[utilizadorId] || { etapa: 'frente' };
+        const sessao = sessoes[utilizadorId] || { etapa: 'frente' };
 
         // Verificar se o estado da sessão é diferente da foto enviada primeiro 
 
-        /*
+        
 
         if (sessao.etapa === 'frente' && faceEnviada !== 'frente') {
 
-            fs.unlinkSync(req.file.path);
+            fs.unlinkSync(caminhoImagem);
 
             return res.status(400).json({ error: 'Tem de enviar primeiro a frente' });
         } 
@@ -157,14 +159,14 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
 
         if (sessao.etapa === 'verso' && faceEnviada !== 'verso') {
 
-            fs.unlinkSync(req.file.path);
+            fs.unlinkSync(caminhoImagem);
 
             return res.status(400).json({ error: 'Frente já tirada, agora faça com o verso' });
         }
 
-        */
+        
 
-        const caminhoImagem = req.file.path
+       
 
 
         const resultado = await modeloGemini.EnviarImagem(caminhoImagem);
@@ -185,7 +187,7 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
 
         // Atualizar o estado
 
-        /*
+        
 
         if (faceEnviada === 'frente') {
 
@@ -196,7 +198,7 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
             delete sessoes[utilizadorId];
         }
 
-        */
+        
 
         
         //Apaga o ficheiro temporário
@@ -214,7 +216,7 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
     } catch (error) {
 
         
-        return res.status(500).json({error: 'Erro ao enviar Imagem'});
+        return res.status(500).json({error: 'Erro ao enviar Imagem', error});
         
     }
 });
