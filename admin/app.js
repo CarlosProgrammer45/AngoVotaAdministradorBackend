@@ -31,7 +31,7 @@ app.use(cors({
     credentials: true
 }));// conexão com o frontend
 app.use(express.json()); //trata toda estrutura em json
-app.use(express.urlencoded({ extended: true }));
+//app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 // Configurações da sessão
 app.use(session({
