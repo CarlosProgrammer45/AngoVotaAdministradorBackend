@@ -5,6 +5,8 @@ require('dotenv').config();
 
 const cors = require('cors');
 
+const cookieParser = require('cookie-parser');
+
 const session = require('express-session');
 
 const http = require('http');
