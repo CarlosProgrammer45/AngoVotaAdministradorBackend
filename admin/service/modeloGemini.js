@@ -129,6 +129,15 @@ class ModeloGemini {
         } else {
             console.log("\n BI recusado", resultado.motivo);
         }
+
+         return {
+        e_bi_Angolano: resultado.e_bi_Angolano || false,
+        e_original: !resultado.foto_copia,  // Se não é fotocópia, é original
+        face: resultado.face || 'indefinido',
+        motivo: resultado.motivo || 'Sem motivo especificado',
+        confianca: resultado.confianca || 'baixa',
+        numero_bi: resultado.numero_bi || null
+    };
     }
 }
 
