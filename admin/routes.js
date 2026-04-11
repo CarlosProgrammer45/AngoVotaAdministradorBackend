@@ -165,7 +165,7 @@ routes.post('/analisar/imagem', carregarImagem.single('imagem'), async (req, res
         
 
 
-        const resultado = await modeloGemini.EnviarImagem(req.file.path);
+        const resultado = await modeloGemini.VerificarBI(req.file.path);
 
         fs.unlinkSync(req.file.path);
 
