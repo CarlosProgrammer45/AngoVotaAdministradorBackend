@@ -20,8 +20,14 @@ class CredenciaisController {
 
       //req.session.biNumber
 
-      if (numero_bi_enc !== req.session.biNumber) {
+      if(!req.session.biNumber){
 
+        console.error("Número Bi não encontrado na sessão");
+        
+      }
+
+      if (numero_bi_enc !== req.session.biNumber) {
+        console.error('Número de bilhetes diferente ao da validação')
         return res.status(401).json({error: 'Número de bilhetes diferente ao da validação'});
       }
 
