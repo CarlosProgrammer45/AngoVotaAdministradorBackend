@@ -47,7 +47,9 @@ class PerfilCNE{
 
             req.session.biNumber = guardarBI; 
     
-            req.session.perfilNumber = perfilNumber;
+            req.session.perfilNumber = perfilNumber
+
+            console.log(req.session.biNumber);
 
 
                 return res.status(200).json(verificar);
