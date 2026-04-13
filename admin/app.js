@@ -34,7 +34,7 @@ app.use(cookieParser());
 app.use(session({
   store: new pgSession({
     pool: pool,
-    tableName: 'session'
+    tableName: 'Sessoes'
   }),
   secret: process.env.KeySession, 
   resave: false,
