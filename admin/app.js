@@ -37,7 +37,8 @@ app.use(cookieParser());
 app.use(session({
 secret: process.env.KeySession, //Chave secreta
 resave: false, // em false, não salva a sessão se não mudou
-saveUninitialized: false, // em false, não cria sessão vazia
+saveUninitialized: false,
+rolling: true, // em false, não cria sessão vazia
 cookie:{
     secure: true, //true quando tiver em produção
     httpOnly: true, //Impede ataques de injeção de javascript
