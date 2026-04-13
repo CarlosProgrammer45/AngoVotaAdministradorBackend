@@ -17,7 +17,7 @@ class CredenciaisController {
    async iniciarRegisto(req, res) {
     try {
       const { numero_bi_enc } = req.body;
-
+/*
       const sessao = req.session.biNumber;
 
       console.log(sessao)
@@ -34,6 +34,8 @@ class CredenciaisController {
         console.error('Número de bilhetes diferente ao da validação')
         return res.status(401).json({error: 'Número de bilhetes diferente ao da validação'});
       }
+
+      */
 
       // Localiza utilizador pelo BI
       const bilhete = await bilhetes_identidade.findOne({
