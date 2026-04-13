@@ -22,7 +22,7 @@ const pool = new Pool({
 
 // Middleware necessários
 app.use(cors({
-  origin: process.env.CONEXAO || 'https://adm-adm.vercel.app',
+  origin: process.env.CONEXAO,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
@@ -41,7 +41,7 @@ app.use(session({
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    domain: 'angovotaadministradorbackend.onrender.com',
+    //domain: 'angovotaadministradorbackend.onrender.com',
     secure: true,       // exige HTTPS em produção
     httpOnly: true,     // protege contra XSS
     sameSite: 'none',   // necessário se front/back têm domínios diferentes
