@@ -17,7 +17,7 @@ const { Server } = require('socket.io');
 
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-const { sequelize } = require('/models');
+const { sequelize } = require('./models');
 
 const app = express();
 
@@ -27,7 +27,7 @@ const store = new SequelizeStore({
    db: sequelize,
    tableName: 'Sessoes',
    checkExpirationInterval: 15 * 60 * 1000,
-   expiration: 24 * 60 * 60 * 1000
+   expiration: 24 * 60 * 60 * 1000 // 1 dia
 });
 
 //Middleware necessários
