@@ -18,15 +18,19 @@ class CredenciaisController {
     try {
       const { numero_bi_enc } = req.body;
 
-      //req.session.biNumber
+      const sessao = req.session.biNumber;
 
-      if(!req.session.biNumber){
+      console.log(sessao)
+
+      
+
+      if(!sessao){
 
         console.error("Número Bi não encontrado na sessão");
         
       }
 
-      if (numero_bi_enc !== req.session.biNumber) {
+      if (numero_bi_enc !== sessao) {
         console.error('Número de bilhetes diferente ao da validação')
         return res.status(401).json({error: 'Número de bilhetes diferente ao da validação'});
       }
