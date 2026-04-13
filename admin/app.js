@@ -51,7 +51,7 @@ rolling: true, // em false, não cria sessão vazia
 cookie:{
     secure: true, //true quando tiver em produção
     httpOnly: true, //Impede ataques de injeção de javascript
-    sameSite: 'none', // Strict -> Só permite o envio de cookies que veem do mesmo domínio
+    sameSite: 'lax', // Strict -> Só permite o envio de cookies que veem do mesmo domínio
     maxAge: 1000 * 60 * 60 // Equivale a 1 hora  
 }
 }));
