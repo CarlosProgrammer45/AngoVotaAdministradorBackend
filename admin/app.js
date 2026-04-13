@@ -16,7 +16,7 @@ app.set('trust proxy', 1);
 
 // 🔹 Pool para sessões (pode usar a mesma connection string do Sequelize)
 const pool = new Pool({
-  connectionString: process.env.CONNECTION_STRING,
+  connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
