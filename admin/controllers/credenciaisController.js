@@ -12,16 +12,15 @@ const rpName = process.env.rpNAME;
 const rpID = process.env.rpID;
 const origin = process.env.ORIGIN;
 
-const sessao = req.session.biNumber;
-
 class CredenciaisController {
   // Iniciar registo
    async iniciarRegisto(req, res) {
     try {
       const { numero_bi_enc } = req.body;
 
-     
+      const sessao = req.session.biNumber;
 
+    
       console.log(sessao)
 
       
