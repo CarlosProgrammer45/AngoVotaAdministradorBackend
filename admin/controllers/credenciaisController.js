@@ -18,6 +18,10 @@ class CredenciaisController {
     try {
       const { numero_bi_enc } = req.body;
 
+      console.log("🔍 Cookie bruto:", req.headers.cookie);
+      console.log("🍪 Cookies recebidos:", req.cookies);
+      console.log("🧠 Sessão atual:", req.session);
+
       const sessao = req.session.biNumber;
 
     
