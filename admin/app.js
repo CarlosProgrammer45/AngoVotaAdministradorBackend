@@ -41,7 +41,6 @@ app.use(session({
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    domain: 'angovotaadministradorbackend.onrender.com',
     secure: true,       // exige HTTPS em produção
     httpOnly: true,     // protege contra XSS
     sameSite: 'none',   // necessário se front/back têm domínios diferentes
@@ -53,7 +52,7 @@ const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(express.static(path.join(__dirname, '../dist/Angular20/browser')));
-app.use('/api', routes);
+app.use(routes);
 
 app.get((req, res)=>{
   res.sendFile(path.join(__dirname, '../dist/Angular20/browser/index.html'))
