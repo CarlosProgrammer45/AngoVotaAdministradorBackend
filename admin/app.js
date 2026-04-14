@@ -52,11 +52,11 @@ app.use(session({
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use(express.static(path.join(__dirname, '/dist/Angular20/browser')));
+app.use(express.static(path.join(__dirname, '../dist/Angular20/browser')));
 app.use('/api', routes);
 
 app.get((req, res)=>{
-  res.sendFile(path.join(__dirname, '/dist/Angular20/browser/index.html'))
+  res.sendFile(path.join(__dirname, '../dist/Angular20/browser/index.html'))
 });
 
 const server = http.createServer(app);
