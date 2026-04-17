@@ -20,9 +20,9 @@ class CredenciaisController {
 
       const sessao = req.session.biNumber;
 
-      console.log("🔍 Cookie bruto:", req.headers.cookie);
-      console.log("🍪 Cookies recebidos:", req.cookies);
-      console.log("🧠 Sessão atual:", req.session);
+      console.log(" Cookie bruto:", req.headers.cookie);
+      console.log(" Cookies recebidos:", req.cookies);
+      console.log(" Sessão atual:", req.session);
 
       console.log(sessao ?? 'Não existe nenhuma sessão');
 
@@ -80,6 +80,12 @@ class CredenciaisController {
       const { credencial } = req.body;
       const expectedChallenge = req.session?.currentChallenge;
       const bilhete_id = req.session?.bilhete_id;
+
+      if(!credencial){
+
+        console.log('Nenhuma credencial enviada');
+        return;
+      }
 
       if (!expectedChallenge || !bilhete_id) {
         return res.status(400).json({ error: 'Sessão inválida' });
@@ -153,6 +159,7 @@ await credenciais.create({
 
       res.json({ success: true, message: 'Credencial registada com sucesso' });
     } catch (err) {
+      console.error(err.message);
       console.error("Erro verificar registo:", err);
       res.status(500).json({ error: 'Erro interno' });
     }
