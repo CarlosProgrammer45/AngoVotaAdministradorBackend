@@ -91,8 +91,8 @@ routes.post('/enviar/webauthn/verificar-login', credenciaisController.verificarL
 routes.post('/candidatos/criar', candidatoController.criarCandidato);
 routes.get('/candidato', candidatoController.listarCandidatos);
 routes.get('/candidato/total/', candidatoController.totalCandidatos);
-router.put('/candidatos/:id', candidatoController.atualizarCandidato);
-router.delete('/candidatos/:id', candidatoController.apagarCandidato);
+routes.put('/candidatos/:id', candidatoController.atualizarCandidato);
+routes.delete('/candidatos/:id', candidatoController.apagarCandidato);
 
 
 //Modelo
