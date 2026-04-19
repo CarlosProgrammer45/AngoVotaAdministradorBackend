@@ -19,6 +19,7 @@ class CandidatoController {
     this.totalCandidatos      = this.totalCandidatos.bind(this);
     this.buscarCandidatoPorId = this.buscarCandidatoPorId.bind(this);
     this.criarCandidato       = this.criarCandidato.bind(this);
+    this.atualizarCandidato   = this.atualizarCandidato.bind(this);
     this.apagarCandidato      = this.apagarCandidato.bind(this);
   }
 
@@ -83,10 +84,9 @@ class CandidatoController {
           'backgroundurl',
           'criando_em'
         ],
-        order: [['criando_em', 'ASC']]  // ordem de criação para o número sequencial ser consistente
+        order: [['criando_em', 'ASC']]
       });
 
-      // Adiciona o campo "numero" sequencial (1, 2, 3...) para o frontend exibir
       const listaComNumero = lista.map((candidato, index) => ({
         ...candidato.toJSON(),
         numero: index + 1
@@ -163,13 +163,11 @@ class CandidatoController {
 
     const { nome, partido, idade, slogan, descricao } = req.body;
 
-    // Validação dos campos de texto
     if (!nome || !partido || !idade || !slogan || !descricao) {
       this._limparFicheirosRequest(req.files);
       return res.status(400).json({ error: 'Os campos nome, partido, idade, slogan e descricao são obrigatórios.' });
     }
 
-    // Validar que idade é um número positivo
     const idadeNum = Number(idade);
     if (isNaN(idadeNum) || idadeNum <= 0 || idadeNum > 120) {
       this._limparFicheirosRequest(req.files);
@@ -191,22 +189,111 @@ class CandidatoController {
       const novoCandidato = await candidatos.create({
         nome,
         partido,
-        idade:        idadeNum,
+        idade: idadeNum,
         slogan,
         descricao,
-        foto_url:     fotoUrl,
+        foto_url: fotoUrl,
         backgroundurl: fundoUrl,
       });
 
       console.log(`✅ Candidato "${nome}" criado com sucesso`);
       return res.status(201).json({
-        message:   'Candidato criado com sucesso.',
+        message: 'Candidato criado com sucesso.',
         candidato: novoCandidato,
       });
 
     } catch (error) {
       this._limparFicheirosRequest(req.files);
       console.error('❌ Erro ao criar candidato:', error);
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+  // ============================================================
+  // PUT /candidatos/:id — Atualizar candidato
+  // ============================================================
+
+  async atualizarCandidato(req, res) {
+    const { id } = req.params;
+
+    // Processa upload se houver arquivos
+    await new Promise((resolve, reject) => {
+      this.upload(req, res, (erroUpload) => {
+        if (erroUpload) reject(erroUpload);
+        else resolve();
+      });
+    }).catch((erroUpload) => {
+      return res.status(400).json({ error: erroUpload.message });
+    });
+
+    if (res.headersSent) return;
+
+    try {
+      console.log(`🔵 Buscando candidato ID ${id} para atualizar...`);
+      
+      const candidato = await candidatos.findByPk(id);
+      
+      if (!candidato) {
+        this._limparFicheirosRequest(req.files);
+        return res.status(404).json({ error: 'Candidato não encontrado.' });
+      }
+
+      const { nome, partido, idade, slogan, descricao } = req.body;
+
+      // Validações
+      if (!nome || !partido || !slogan || !descricao) {
+        this._limparFicheirosRequest(req.files);
+        return res.status(400).json({ error: 'Os campos nome, partido, slogan e descricao são obrigatórios.' });
+      }
+
+      const idadeNum = Number(idade);
+      if (isNaN(idadeNum) || idadeNum <= 0 || idadeNum > 120) {
+        this._limparFicheirosRequest(req.files);
+        return res.status(400).json({ error: 'Idade inválida.' });
+      }
+
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      let fotoUrl = candidato.foto_url;
+      let fundoUrl = candidato.backgroundurl;
+
+      // Se nova foto foi enviada, apaga a antiga e guarda a nova
+      if (req.files?.foto?.[0]) {
+        const nomeFotoAntiga = candidato.foto_url?.split('/uploads/')?.[1];
+        if (nomeFotoAntiga) {
+          this._apagarFicheiro(path.join(this.pastaUploads, nomeFotoAntiga));
+        }
+        fotoUrl = `${baseUrl}/uploads/${req.files.foto[0].filename}`;
+      }
+
+      // Se novo fundo foi enviado, apaga o antigo e guarda o novo
+      if (req.files?.fundo?.[0]) {
+        const nomeFundoAntigo = candidato.backgroundurl?.split('/uploads/')?.[1];
+        if (nomeFundoAntigo) {
+          this._apagarFicheiro(path.join(this.pastaUploads, nomeFundoAntigo));
+        }
+        fundoUrl = `${baseUrl}/uploads/${req.files.fundo[0].filename}`;
+      }
+
+      // Atualiza os dados
+      await candidato.update({
+        nome,
+        partido,
+        idade: idadeNum,
+        slogan,
+        descricao,
+        foto_url: fotoUrl,
+        backgroundurl: fundoUrl,
+      });
+
+      console.log(`✅ Candidato ID ${id} atualizado com sucesso`);
+      return res.status(200).json({
+        message: 'Candidato atualizado com sucesso.',
+        candidato
+      });
+
+    } catch (error) {
+      this._limparFicheirosRequest(req.files);
+      console.error('❌ Erro ao atualizar candidato:', error);
       return res.status(500).json({ error: error.message });
     }
   }
