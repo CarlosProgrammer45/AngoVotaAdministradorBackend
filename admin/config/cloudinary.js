@@ -8,7 +8,7 @@ cloudinary.config({
 
 // LOG TEMPORÁRIO — remove depois de resolver
 console.log('☁️ Cloudinary config:', {
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? `${ CLOUDINARY_CLOUD_NAME }` : "❌ indefinida",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? `${ process.env.CLOUDINARY_CLOUD_NAME }` : "❌ indefinida",
   api_key:    process.env.CLOUDINARY_API_KEY ? '✅ definida' : '❌ indefinida',
   api_secret: process.env.CLOUDINARY_API_SECRET ? '✅ definida' : '❌ indefinida',
 });
