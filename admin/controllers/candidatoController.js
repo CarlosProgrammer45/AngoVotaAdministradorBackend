@@ -2,7 +2,7 @@
 const { candidatos } = require('../models');
 const { Op } = require('sequelize');
 const multer = require('multer');
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary-v2');
 const cloudinary = require('../config/cloudinary'); // ver config abaixo
 
 class CandidatoController {
