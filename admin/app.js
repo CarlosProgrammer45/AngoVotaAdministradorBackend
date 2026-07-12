@@ -22,10 +22,14 @@ const pool = new Pool({
 
 // Middleware necessários
 app.use(cors({
-  origin: process.env.CONEXAO,
+  origin: [
+    process.env.CONEXAO,
+    "https://angovota-oficial.onrender.com"
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
+
 
 app.use(express.json());
 app.use(cookieParser());
