@@ -47,45 +47,56 @@ class EleitoresController{
 
    		}
 
-   		const totaisEleitores = await eleitores.findAll({
+  		const totaisEleitores = await eleitores.findAll({
 
-   			attributes:['provincia', 'data_registo'],
-   			where,
+  			attributes:[
+          'provincia',
+          'data_registo',
+          [sequelize.col('voto.id'), 'tem_voto']
+        ],
+  			where,
 
-   			include: [{
-
-
-   				model: bilhetes_identidade,
-
-   				as: 'bilhete',
-
-   				attributes:[
-
-   				'nome_completo',
-
-   				[
-   					sequelize.literal(`pgp_sym_decrypt("bilhete"."numero_bi_enc"::bytea, '${process.env.MinhaChave}')`),
-
-   					'bi'
-   				]
-
-   			],
-
-   				
-   			}]
+  			include: [{
 
 
-   		}); 
+  				model: bilhetes_identidade,
+
+  				as: 'bilhete',
+
+  				attributes:[
+
+  				'nome_completo',
+
+  				[
+  					sequelize.literal(`pgp_sym_decrypt("bilhete"."numero_bi_enc"::bytea, '${process.env.MinhaChave}')`),
+
+  					'bi'
+  				]
+
+  			],
+
+  				
+  			},
+
+      {
+        model: votos,
+        as: 'voto',
+        attributes: [],
+        required: false
+      }]
 
 
-   		
-   		const io  = req.app.get('io');
+  		}); 
 
-   		io.emit('totais_Eleitores', totaisEleitores);
 
-   		//console.log("Emitindo totais_Eleitores:", totaisEleitores.length);
+  		
+  		const io  = req.app.get('io');
 
-   		res.status(200).json(totaisEleitores);
+  		io.emit('totais_Eleitores', totaisEleitores);
+
+  		//console.log("Emitindo totais_Eleitores:", totaisEleitores.length);
+
+  		res.status(200).json(totaisEleitores);
 
 
    	} catch(error){

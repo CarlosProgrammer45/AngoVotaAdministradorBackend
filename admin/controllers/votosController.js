@@ -179,15 +179,40 @@ class VotosController {
 
     try{
 
+      const { data } = req.query; // 'hoje' (padrão) ou 'ontem'
+
+      const hoje = new Date();
+      const inicioHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+      const fimHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + 1);
+
+      let whereData = {};
+
+      if (data === 'ontem') {
+        const inicioOntem = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - 1);
+        const fimOntem = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+        whereData = {
+          data_voto: {
+            [Op.gte]: inicioOntem,
+            [Op.lt]: fimOntem
+          }
+        };
+      } else {
+        // 'hoje' (padrão)
+        whereData = {
+          data_voto: {
+            [Op.gte]: inicioHoje,
+            [Op.lt]: fimHoje
+          }
+        };
+      }
+
       const votoPorHora = await votos.findAll({
+        where: whereData,
         attributes:[
           [sequelize.fn('TO_CHAR', sequelize.col('data_voto'), 'HH24'), 'hora'],
-
           [sequelize.fn('COUNT', sequelize.col('id')), 'votos']
         ],
-
         group:[[sequelize.fn('TO_CHAR', sequelize.col('data_voto'), 'HH24')]],
-
         order:[[[sequelize.fn('TO_CHAR', sequelize.col('data_voto'), 'HH24')]]]
       });
 
